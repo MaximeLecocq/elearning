@@ -1,0 +1,31 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}About Me{% endblock %}
+
+{% block body %}
+<main class="container-xxl py-5">
+    <section class="mt-4 text-center">
+        <div class="d-inline-block">
+            <h1 class="mb-4">List of rooms</h1>
+            {% for chatroom in chatrooms %}
+            <div class="shadow-lg p-3 mb-5 bg-body rounded mt-2">
+                <a href="{% url 'chatroom' chatroom.slug %}" >{{ chatroom.name }}</a></br>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="mt-4 text-center">
+        <div class="d-inline-block">
+            {% if user.is_authenticated and user.is_teacher%}
+            <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_teacher' %}" style="color: black";>Back</a></button>
+            {% endif%}
+
+            {% if user.is_authenticated and user.is_student%}
+            <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_student' %}" style="color: black";>Back</a></button>
+            {% endif%}
+        </div>
+    </section>
+</main>
+{% endblock %}

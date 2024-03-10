@@ -1,0 +1,59 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}Teacher Homepage{% endblock %}
+
+{% block body %}
+
+<main class="container mt-5 mb-5">
+    <h2 class="text-center mb-4">Search Results</h2>
+
+    <section class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Students</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for student in students %}
+                            <li class="list-group-item">{{ student.username }} - Enrolled in:
+                                {% for enrollment in student.enrollment_set.all %}
+                                    {{ enrollment.course.title }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No students found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3 class="card-title">Teachers</h3>
+                    <ul class="list-group list-group-flush">
+                        {% for teacher in teachers %}
+                            <li class="list-group-item">{{ teacher.username }} - Teaches:
+                                {% for course in teacher.courses_taught.all %}
+                                    {{ course.title }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item">No teachers found.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <section class="mt-4 text-center">
+        <div class="d-inline-block">
+        <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_teacher' %}" style="color: black";>Back</a></button>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

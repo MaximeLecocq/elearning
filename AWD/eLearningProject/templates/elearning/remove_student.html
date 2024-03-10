@@ -1,0 +1,15 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-5 p-4">
+    <h1>Are you sure you want to remove this student?</h1>
+
+    <form action="{% url 'remove_student' enrollment.course_id student.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Yes</button>
+        <a href="">No</a>
+    </form>
+
+</div>
+{% endblock %}

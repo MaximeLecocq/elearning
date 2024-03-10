@@ -1,0 +1,22 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block body %}
+<main class="container mt-5">
+    <h2 class="text-center mb-4">New Enrollment Notification</h2>
+    <section>
+        <p>Hello Professor {{ notification.recipient.username }},</p>
+        <p>A new student has enrolled in the course "{{ notification.course.title }}".</p>
+        <p>Student: {{ notification.sender.username }}</p>
+        <p>Course: {{ notification.course.title }}</p>
+    </section>
+
+    <section class="mt-4 text-center">
+        <div class="d-inline-block">
+            <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_teacher' %}" style="color: black";>Back</a></button>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+

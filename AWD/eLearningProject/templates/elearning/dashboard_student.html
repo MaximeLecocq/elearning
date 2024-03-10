@@ -1,0 +1,76 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block body %}
+
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+{% endif %}
+
+
+<main class="container mt-5">
+
+    <!-- Welcome Message -->
+    <section class="row justify-content-center">
+        <div class="col-auto">
+            <h1>Welcome {{ user.first_name }}!</h1>
+        </div>
+    </section>
+
+    <!-- Navigation Links for Students-->
+    <section class="row justify-content-center mt-3">
+        <div class="col-auto">
+            <button class="button-51 mx-3 my-4"><a href="{% url 'courses_list' %}">List of Courses</a></button>
+            <button class="button-51 mx-3 my-4"><a href="{% url 'enrolled_courses' %}">Enrolled Courses</a></button>
+            <button class="button-51 mx-3 my-4"><a href="{% url 'index' %}">Live Chat</a></button>
+        </div>
+    </section>
+
+    <!-- Status Update Form -->
+    <section class="row justify-content-center mt-4">
+        <form class="col-auto" method="post">
+            {% csrf_token %}
+            {{ student_form.as_p }}
+            <button class="button-30" role="button" type="submit">Post Status</button>
+        </form>
+    </section>
+
+    <!-- Status Updates from Student-->
+    <section class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <h2>Status Updates</h2>
+            <div class="status-list">
+                {% for status in status %}
+                <div class="status-item card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ status.title }}</h5>
+                        <p class="card-subtitle text-muted">{{ status.created }}</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ status.caption }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <p class="text-muted">Posted by: {{ status.user }}</p>
+                        {% if status.user == request.user %}
+                        <form method="post" action="{% url 'delete_status' status.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>No status updates available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+
+{% endblock %}

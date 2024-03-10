@@ -1,0 +1,56 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block body %}
+<main class="container mt-5 mb-5">
+  <section class="row justify-content-center">
+    <h1>User Registration Page</h1>
+  </section>
+  <section class="row justify-content-center mt-3">
+    <form method="post">
+      {% csrf_token %}
+      <div class="col-md-6">
+        <div class="form-group mb-3">
+          <label for="username">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="form-group mb-3">
+          <label for="email">Email Address</label>
+          {{ form.email}}
+        </div>
+        <div class="form-group mb-3">
+          <label for="first_name">First Name</label>
+          {{ form.first_name }}
+        </div>
+        <div class="form-group mb-3">
+          <label for="last_name">Last Name</label>
+          {{ form.last_name }}
+        </div>
+        <div class="form-group mb-3">
+          <label for="password">Password</label>
+          {{ form.password1 }}
+        </div>
+        <div class="form-group mb-3">
+          <label for="password">Confirm Password</label>
+          {{ form.password2 }}
+        </div>
+        <div class="form-group mb-3">
+          {{ form.user_type.label_tag }}
+          <br>
+          {% for radio in form.user_type %}
+              {{ radio.tag }} {{ radio.choice_label }}
+          <br>
+          {% endfor %}
+        </div>
+        <div class="form-group mb-3">
+          <label for="avatar">Avatar</label>
+          <input type="file" name="avatar" id="avatar">
+        </div>
+        <div>
+          <button class="button-49 py-4 px-lg-5 d-none d-lg-block mb-3" type="submit">Register</button>
+        </div>
+      </div>
+    </form>
+  </section>
+</main>
+{% endblock %}

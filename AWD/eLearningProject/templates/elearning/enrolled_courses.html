@@ -1,0 +1,31 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}Enrolled Courses{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5">
+    <h1>List of Enrolled Courses</h1>
+    <div class="row">
+    {% for course_id in enrolled_courses %}
+        {% with course=course_id.course %}
+        <li>{{ course_id }} - {{ course.title }}</li>
+        {% endwith %}
+    {% endfor %}
+    </div>
+
+    {% if user.is_authenticated and user.is_teacher%}
+    <a href="{% url 'create_course' %}" class="btn btn-primary">Create a course</a>
+    <button class="button-52" role="button"><a href="{% url 'dashboard_teacher' %}" style="color: black";>Back</a></button>
+    {% endif%}
+
+    {% if user.is_authenticated and user.is_student%}
+    <button class="button-52" role="button"><a href="{% url 'dashboard_student' %}" style="color: black";>Back</a></button>
+    {% endif%}
+
+
+</div>
+
+
+{% endblock %}

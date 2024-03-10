@@ -1,0 +1,91 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block body %}
+
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{ message.tags }}">
+    {{ message }}
+</div>
+{% endfor %}
+{% endif %}
+
+
+<main class="container mt-5">
+
+    <!-- Welcome Message -->
+    <section class="row justify-content-center">
+        <div class="col-auto">
+            <h1 class="mb-4">Welcome Professor <span class="capitalize">{{ user.last_name }}</span>!</h1>
+        </div>
+    </section>
+
+    <!-- Navigation Links for Teachers-->
+    <section class="row justify-content-center mt-3">
+        <div class="col-auto">
+            <button class="button-51 mx-3 my-4"><a href="{% url 'list_students' %}">List of all Students</a></button>
+            <button class="button-51 mx-3 my-4"><a href="{% url 'create_course' %}">Create a Course</a></button>
+            <button class="button-51 mx-3 my-4"><a href="{% url 'courses_list' %}">List of Courses</a></button>
+            <button class="button-51 mx-3 my-4"><a href="{% url 'index' %}">Live Chat</a></button>
+            <button class="button-51 mx-3 my-4"><a href="{% url 'notification_list' %}">Notifications</a></button>
+        </div>
+    </section>
+
+    <!-- Search Functionality for Teachers-->
+    <section class="row justify-content-center mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <form action="{% url 'search_results' %}" method="get" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="query" class="form-control" placeholder="Search...">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Status Update Form -->
+    <section class="row justify-content-center mt-4">
+        <form class="col-auto" method="post">
+            {% csrf_token %}
+            {{ teacher_form.as_p }}
+            <button class="button-30" role="button" type="submit">Post Status</button>
+        </form>
+    </section>
+
+    <!-- Status Updates from Teachers-->
+    <section class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <h2>Status Updates</h2>
+            <div class="status-list">
+                {% for status_teacher in status_teacher %}
+                <div class="status-item card mb-3">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ status_teacher.title }}</h5>
+                        <p class="card-subtitle text-muted">{{ status_teacher.created }}</p>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ status_teacher.caption }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <p class="text-muted">Posted by: {{ status_teacher.user }}</p>
+                        {% if status_teacher.user == request.user %}
+                        <form method="post" action="{% url 'delete_status_teacher' status_teacher.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <p>No status updates available.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</main>
+{% endblock %}

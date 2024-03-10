@@ -1,0 +1,88 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            {% if enrollment_successful %}
+            <div class="alert alert-success" role="alert">
+                You have successfully enrolled in the course "{{ course.title }}".
+            </div>
+            {% endif %}
+
+            <h1>{{ course.title }}</h1>
+            <p><strong>Description:</strong> {{ course.description }}</p>
+            <p><strong>Instructor:</strong> {{ course.instructor|capfirst }}</p>
+            {% if user.is_authenticated and user.is_teacher%}
+            <p><strong>PDF Material:</strong> <a href="{{ course.pdf_material.url }}">{{ course.title }}</a></p>
+            {% endif %}
+
+            {% if enrolled or enrollment_successful %}
+                <div class="mt-4">
+                    {% if course.pdf_material %}
+                        <p><strong>PDF Material:</strong> <a href="{{ course.pdf_material.url }}">Download PDF</a></p>
+                    {% endif %}
+                    {% if course.video_material %}
+                        <p><strong>Video Material:</strong> <a href="{{ course.video_material.url }}">Watch Video</a></p>
+                    {% endif %}
+                    {% if course.image_material %}
+                        <p><strong>Image Material:</strong> <img src="{{ course.image_material.url }}" alt="Course Image" class="img-fluid"></p>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if enrolled %}
+            <div class="mt-4">
+                <h2>Leave Feedback</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ feedback_form.as_p }}
+                    <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                </form>
+            </div>
+            {% endif %}
+
+            <div class="mt-4">
+                <h2>Feedbacks</h2>
+                {% for feedback in feedbacks %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p class="card-text"><strong>Student:</strong> {{ feedback.student.username }}</p>
+                        <p class="card-text"><strong>Feedback:</strong> {{ feedback.feedback_text }}</p>
+                        <p class="card-text"><strong>Rating:</strong> {{ feedback.rating }}</p>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No feedbacks yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            {% if not enrolled and user.is_student %}
+            <div class="mt-4">
+                <h2>Enroll in Course</h2>
+                <form method="post" action="{% url 'enroll_course' course.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Enroll Now</button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <div class="text-center mt-4 mb-5">
+        <button type="submit" class="button-52" role="button"><a href="{% url 'courses_list' %}" style="color: black";>Back</a></button>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+

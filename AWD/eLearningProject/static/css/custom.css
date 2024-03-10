@@ -1,0 +1,26 @@
+.custom-red {
+    background-color: white;
+  }
+  
+  .white-text {
+    color: red;
+    font-family: 'Minya Nouvelle Regular', sans-serif;
+  }
+  
+  .font{
+    font-family: 'Minya Nouvelle Regular', sans-serif;
+  }
+  
+  @font-face {
+    font-family: 'Minya Nouvelle Regular';
+    src: url('/static/fonts/minya-nouvelle.regular.otf') format('opentype');
+  }
+  
+  .text-shadow {
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 3);
+    padding-top: 50px;
+  }
+  
+  .capitalize {
+    text-transform: uppercase;
+  }

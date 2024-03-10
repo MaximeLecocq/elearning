@@ -1,0 +1,16 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}Enrollment Confirmation{% endblock %}
+
+{% block body %}
+<main class="container mt-5">
+    <div class="row justify-content-center">
+    <h1>Enrollment Successful</h1>
+    <p>You have successfully enrolled in the course "{{ course.title }}".</p>
+    
+    <a href="{% url 'course_detail' course_id=course.id %}" class="btn btn-dark mb-3">Go to Course Details</a>
+    <a href="{% url 'courses_list' %}" class="btn btn-dark mb-3">List of courses</a>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block body %}
+<main class="container">
+  <div class="row justify-content-center align-items-center vh-100">
+    <div class="col-md-6 text-center">
+      <h2 class="mb-4">My Profile</h2>
+      <div class="mb-4">
+        {% if user.avatar %}
+          <img src="{{ user.avatar.url }}" class="img-fluid rounded-circle" style="max-width: 200px;" alt="User Avatar">
+        {% else %}
+          <img src="{% static 'images/cat.png' %}" class="img-fluid rounded-circle" style="max-width: 200px;" alt="Cat Avatar">
+        {% endif %}
+      </div>
+      <div>
+        <p class="mb-4"><strong>My Username: <br>{{ user.username }}</strong></p>
+        <p class="mb-4"><strong>My First Name: <br>{{ user.first_name }}</strong></p>
+        <p class="mb-4"><strong>My Last Name: <br>{{ user.last_name }}</strong></p>
+        <p class="mb-4"><strong>My Email Address: <br>{{ user.email }}</strong></p>
+      </div>
+      <div>
+        <a href="{% url 'profile_edit' %}" class="btn btn-outline-dark">Edit Profile</a>
+        <a href="{% url 'confirm_delete_profile' %}" class="btn btn-danger">Delete Profile</a>
+        <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_teacher' %}" style="color: black";>Back</a></button>
+
+      </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

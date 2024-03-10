@@ -1,0 +1,105 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+
+{% block body %}
+<main class="container-xxl py-5">
+
+    <section class="fw-bold mt-5">
+        {{ chatroom.name }}
+    </section>
+
+    <section class="message-container m-10 overflow-auto" style="max-height: 700px;" id="message-container">
+        <div id="chat-messages">
+            {% for message in messages %}
+            <div class="message shadow-lg p-3 m-3 rounded-lg">
+                <div style="color: blue;">
+                    {{ message.user.username }}
+                </div>
+                <div style="font-weight: bold;">
+                    {{ message.message_content }}
+                </div>
+                <div style="color: gray;">
+                    {{ message.date }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <form method="post">
+        <input id="message-input" type="text" name="message" placeholder="Enter message">
+        <button id="send-button" type="submit">Send</button>
+    </form>
+
+    {{ chatroom.slug|json_script:"json-chatroomname" }}
+    {{ request.user.username|json_script:"json-username" }}
+
+    <script>
+        const chatRoomName = JSON.parse(document.getElementById('json-chatroomname').textContent)
+        const username = JSON.parse(document.getElementById('json-username').textContent)
+        console.log(chatRoomName)
+        const chatSocket = new WebSocket(
+            'ws://'
+            +window.location.host
+            +'/ws/'
+            +chatRoomName
+            +'/'
+        )
+        chatSocket.onmessage=function(e){
+            console.log('This is a message')
+            const data = JSON.parse(e.data)
+            if(data.message){
+                console.log('Received message to client is', data.message)
+                let html = '<div class="message shadow-lg p-3 m-3 rounded-lg">' + 
+                    '<div style="color: blue;">' +
+                    data.username + '</div>' + data.message + '<div style="color: gray;">' + 'Now' + '</div>'
+                document.getElementById('chat-messages').innerHTML += html
+                scroll()
+            }
+                
+            else{
+                alert('The message was empty')
+            }
+        }
+        chatSocket.onclose = function(e){
+            console.log('Socket closed')
+        }
+
+        document.getElementById('send-button').onclick = function(e){
+            e.preventDefault()
+            const messageInput = document.getElementById('message-input')
+            const message = messageInput.value
+            console.log(message)
+            
+            chatSocket.send(JSON.stringify({
+                'message':message,
+                'username':username,
+                'room':chatRoomName
+            }))
+            messageInput.value=""
+        }
+
+        function scroll(){
+            const msgcontainer = document.getElementById('message-container')
+            msgcontainer.scrollTop = msgcontainer.scrollHeight
+        }
+        scroll()
+
+    </script>
+
+    <section class="mt-4 text-center">
+        <div class="d-inline-block">
+            {% if user.is_authenticated and user.is_teacher%}
+            <button type="submit" class="button-52" role="button" style="margin-right: 40px;"><a href="{% url 'index' %}" style="color: black";>Back</a></button>
+            <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_teacher' %}" style="color: black";>Return to my Dashboard</a></button>
+            {% endif%}
+
+            {% if user.is_authenticated and user.is_student%}
+            <button type="submit" class="button-52" role="button" style="margin-right: 40px;"><a href="{% url 'index' %}" style="color: black";>Back</a></button>
+            <button type="submit" class="button-52" role="button"><a href="{% url 'dashboard_student' %}" style="color: black";>Return to my Dashboard</a></button>
+            {% endif%}
+        </div>
+    </section>
+</main>
+{% endblock %}

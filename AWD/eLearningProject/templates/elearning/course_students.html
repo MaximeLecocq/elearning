@@ -1,0 +1,30 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}List of courses{% endblock %}
+
+{% block body %}
+
+<main class="container mt-5">
+    <h2 class="text-center mb-4">Enrolled Students for "{{ course.title }}"</h2>
+
+    <ul class="list-group">
+        {% for enrollment in enrolled_students %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ enrollment.student.first_name }} {{ enrollment.student.last_name }}</span>
+                <form action="{% url 'remove_student' course_id=enrollment.course_id student_id=enrollment.student_id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Remove</button>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No students enrolled.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="button-52" role="button"><a href="{% url 'courses_list' %}" style="color: black";>Back</a></button>
+    </div>
+</main>
+
+{% endblock %}

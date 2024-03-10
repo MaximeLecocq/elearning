@@ -1,0 +1,22 @@
+{% extends 'staticpages/base.html' %}
+{% load static %}
+
+{% block title %}Enrollment Confirmation{% endblock %}
+
+{% block body %}
+<main class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="mb-4">Enrollment Already Exists</h1>
+            <p class="lead">You are already enrolled in the course "{{ course.title }}".</p>
+            
+        </div>
+        <div class="mt-5 text-center">
+            <button class="button-52" role="button"><a href="{% url 'course_detail' course_id=course.id %}" style="color: black;">Back</a></button>
+        </div>
+        <div class="mt-5 mb-5 text-center">
+            <button class="button-51" role="button"><a href="{% url 'courses_list' %}">Browse Other Courses</a></button>
+        </div>
+    </div>
+</main>
+{% endblock %}
